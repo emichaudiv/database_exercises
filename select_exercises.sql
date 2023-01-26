@@ -6,8 +6,8 @@ select artist from albums;
 -- There are 31 artists
 select name from albums;
 -- Name is the primary key.
-select release_date from albums;
--- Oldest 1967, Newest 2000
+select release_date from albums order by release_date asc;
+-- Oldest 1967, Newest 2011
 select * from albums where artist = 'Pink Floyd';
 -- The Dark Side of The Moon, The Wall
 select * from albums where artist = 'The Beatles';
