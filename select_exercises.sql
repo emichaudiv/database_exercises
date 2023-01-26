@@ -14,4 +14,4 @@ select * from albums where name = 'Nevermind';
 select * from albums where release_date between 1990 and 1999;
 select * from albums where sales < 20;
 select * from albums where genre = 'Rock';
--- The latter didn't include other forms of rock due to the search be specified only to rocket
+-- The latter didn't include other forms of rock due to the search be specified only to rock
