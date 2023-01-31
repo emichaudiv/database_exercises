@@ -5,6 +5,9 @@ describe titles;
 
 select distinct title
 from titles;
+
+select count(distinct title)
+from titles;
 -- 7 titles
 
 select last_name 
@@ -73,3 +76,14 @@ from salaries
 where salary > 80000 and salary < 90000
 group by emp_no limit 10;
 
+select lower(concat(substr(first_name, 1, 1),substr(last_name, 1, 4), '_',lpad(month(birth_date),2,0),substr(birth_date, 3,2))) as username, count(*)
+from employees
+group by username limit 10;
+
+select lower(concat(substr(first_name, 1, 1),substr(last_name, 1, 4), '_',lpad(month(birth_date),2,0),substr(birth_date, 3,2))) as username, count(*)
+from employees
+group by username
+having count(*) >= 2
+order by count(*) desc limit 10;
+
+-- 6,2
