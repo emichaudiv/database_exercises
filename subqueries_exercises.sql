@@ -13,31 +13,48 @@ WHERE emp_no = 101010;
 
 SELECT first_name, last_name, hire_date 
 FROM employees
-WHERE hire_date = (SELECT hire_date 
+JOIN dept_emp USING (emp_no)
+WHERE to_date > NOW() and hire_date  = (SELECT hire_date 
 FROM employees
 WHERE emp_no = 101010) LIMIT 10;
 
 
-SELECT first_name, last_name, emp_no,dept_name
+SELECT emp_no
 FROM employees
-JOIN dept_emp USING (emp_no)
-JOIN departments USING (dept_no)
 WHERE first_name = 'Aamod';
 
-SELECT first_name, last_name, hire_date, to_date
+SELECT DISTINCT title, count(*) as count
+FROM dept_emp
+JOIN titles USING (emp_no)
+WHERE dept_emp.to_date > now() AND emp_no IN (SELECT emp_no
 FROM employees
-JOIN dept_emp USING (emp_no)
-WHERE to_date != '9999-01-01' ;
--- 91479
+WHERE first_name = 'Aamod')
+GROUP BY title;
 
-SELECT first_name, last_name, hire_date, to_date, gender
+
+SELECT emp_no
+FROM dept_emp
+where to_date > now();
+
+select emp_no
 FROM employees
-JOIN dept_emp USING (emp_no)
-JOIN departments USING (dept_no)
-JOIN dept_manager USING (to_date)
-WHERE to_date = '9999-01-01' AND gender = 'F' 
-GROUP BY first_name, last_name, hire_date, to_date, gender;
--- View lint, Im not typing all of that, which could mean I wrong maybe
+where emp_no not in (SELECT emp_no
+FROM dept_emp
+WHERE to_date > now());
+-- 59,900
+
+SELECT *
+from dept_manager
+WHERE to_date > now();
+
+SELECT first_name, last_name, gender
+FROM employees 
+where gender = 'F'
+AND emp_no in 
+(SELECT emp_no
+from dept_manager
+WHERE to_date > now()); 
+-- Isamu, Karsten, Leon, Hilary
 
 describe salaries;
 
@@ -51,10 +68,29 @@ WHERE to_date = '9999-01-01' AND salary > (SELECT avg(salary)
 FROM salaries)
 GROUP BY emp_no;
 
-SELECT count(salary)
-FROM employees
-JOIN salaries USING (emp_no)
-WHERE salary > (SELECT avg(salary)
-FROM salaries 
-WHERE salary > (SELECT avg(salary)
-FROM salaries));
+SELECT max(salary)
+FROM salaries
+where to_date > now();
+
+select stddev(salary)
+from salaries
+where to_date > now();
+
+SELECT *
+FROM salaries
+WHERE to_date > now() and salary > (SELECT max(salary)
+FROM salaries
+where to_date > now()) - (select stddev(salary)
+from salaries
+where to_date > now());
+
+-- 83
+SELECT (
+SELECT *
+FROM salaries
+WHERE to_date >= now() and salary > (SELECT max(salary)
+FROM salaries
+where to_date > now()) - (select stddev(salary)
+from salaries
+where to_date > now()) / (select count(*) from salaries where to_date > now())) * 100;
+
